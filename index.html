@@ -1,0 +1,73 @@
+<html>
+<title>Fastest PageRank Checker</title>
+<head>
+<style>
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 50px;
+}
+#main {
+  text-align: center;
+}
+#url {
+  margin: 50px;
+  font-size: 50px;
+}
+.null {
+  color: #ccc;
+}
+</style>
+</head>
+<body>
+<div id="main">
+  Type your url.
+  <div>
+    <input id="url" type="search"/>
+  </div>
+</div>
+<div>
+<ul>
+</ul>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+<script>
+$('#url').focus();
+var pending = {};
+var cache = {};
+$('#url').on('keyup', function() {
+  var val = $(this).val().trim();
+  if (!val || val.length < 3 || !ok(val)) return;
+  get(val, function(data) {
+    if (data.success) {
+      $('<li>' + val + ': ' + data.rank + '</li>')
+        .addClass(data.rank != null ? 'good' : 'null').prependTo('ul');
+    }
+  });
+});
+
+var prev = null;
+function get(val, cb) {
+  if (val == prev) {
+    return false;
+  }
+  prev = val;
+  if (cache[val]) {
+    return cb(cache[val]);
+  }
+  if (pending[val]) {
+    return false;
+  }
+  pending[val] = true;
+  $.get('/rank?url=' + val, function(data) {
+    delete pending[val];
+    cache[val] = data;
+    cb(data);
+  });
+}
+
+function ok(value) {
+return /^(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(value);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "pagerank-checker",
+  "description": "google pagerank checker",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "latest",
+    "google-pagerank": "latest"
+  }
+}
