@@ -58,7 +58,7 @@ function get(val, cb) {
     return false;
   }
   pending[val] = true;
-  $.get('/rank?url=' + val, function(data) {
+  $.get('rank?url=' + val, function(data) {
     delete pending[val];
     cache[val] = data;
     cb(data);
