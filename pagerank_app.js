@@ -9,7 +9,6 @@ app.get('/', function(req, res) {
 
 app.get('/rank', function(req, res) {
   pagerank(req.query.url, function(err, rank) {
-    console.log(err, rank);
     if (err) {
       res.send({success: false});
     } else {
