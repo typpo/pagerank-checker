@@ -18,6 +18,9 @@ body {
   color: #ccc;
   font-size: 20px;
 }
+.instructions {
+  font-size: 10px;
+}
 </style>
 </head>
 <body>
@@ -25,6 +28,8 @@ body {
   Type a url to check pagerank.
   <div>
     <input id="url" type="search"/>
+    <br>
+    <span class="instructions">press enter to clear</span>
   </div>
 </div>
 <div>
@@ -36,7 +41,11 @@ body {
 $('#url').focus();
 var pending = {};
 var cache = {};
-$('#url').on('keyup', function() {
+$('#url').on('keyup', function(e) {
+  if (e.keyCode == 13) {
+    $('#url').val('');
+    return false;
+  }
   var val = $(this).val().trim();
   if (!val || val.length < 3 || !ok(val)) return;
   get(val, function(data) {
