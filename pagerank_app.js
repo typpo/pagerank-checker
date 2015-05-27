@@ -8,10 +8,13 @@ app.get('/', function(req, res) {
 });
 
 app.get('/rank', function(req, res) {
+  console.log('query', req.query.url);
   pagerank(req.query.url, function(err, rank) {
     if (err) {
+      console.log('ERROR', err);
       res.send({success: false});
     } else {
+      console.log('rank', rank);
       res.send({success: true, rank: rank});
     }
   });
