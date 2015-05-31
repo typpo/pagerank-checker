@@ -49,10 +49,11 @@ $('#url').on('keyup', function(e) {
   var val = $(this).val().trim();
   if (!val || val.length < 3 || !ok(val)) return;
   get(val, function(data) {
-    if (data.success) {
-      $('<li>' + val + ': ' + data.rank + '</li>')
-        .addClass(data.rank != null ? 'good' : 'null').prependTo('ul');
+    if (!data.success) {
+      data.rank = 'null';
     }
+    $('<li>' + val + ': ' + data.rank + '</li>')
+      .addClass(data.rank != null ? 'good' : 'null').prependTo('ul');
   });
 });
 
